@@ -40,11 +40,27 @@ def approval_time_by_type():
 def approval_proportion_by_district():
 
     get_approval_proportion_by_district()
-    
-    data = getDataFromDatabase('APPROVAL_BY_DISTRICT')
+
+    data = getDataFromDatabase('APPROVAL_PROPORTION_BY_DISTRICT')
 
     response =  jsonify({
         'district': list(data['district']),
+        'approval_proportion': list(data['proportion'])
+    })
+
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    return response
+
+@app.route('/api/approval_proportion_by_type')
+def approval_proportion_by_type():
+
+    get_approval_proportion_by_type()
+    
+    data = getDataFromDatabase('APPROVAL_PROPORTION_BY_TYPE')
+
+    response =  jsonify({
+        'type_dossier': list(data['type_dossier']),
         'approval_proportion': list(data['proportion'])
     })
 

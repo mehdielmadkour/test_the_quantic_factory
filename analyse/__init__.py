@@ -18,7 +18,6 @@ def calculate_approval_time():
     time = list(data.apply(lambda row : calculate_time(row['date_depot'], row['date_decision']), axis=1))
     data['time'] = time
     save(data, 'APPROVAL_TIME', append=False)
-    print(data)
 
     
 def calculate_approval_time_by_district():
@@ -85,4 +84,34 @@ def get_approval_proportion_by_district():
 
     df = pd.DataFrame(results)
     
-    save(df, 'APPROVAL_BY_DISTRICT', append=False)
+    save(df, 'APPROVAL_PROPORTION_BY_DISTRICT', append=False)
+
+
+def get_approval_proportion_by_type():
+
+    data = getDataFromDatabase('APPROVAL_TIME')
+
+    data = data.loc[:, ['type_dossier', 'etat']]
+    data = data[data.etat != 'En cours d\'instruction']
+
+    dossiers = ['Déclarations préalables', 'Permis d\'aménager', 'Permis de construire', 'Permis de démolir']
+
+    results = []
+    for type in dossiers:
+        data_dossier = data[data.type_dossier == type]
+        
+        accord = data_dossier[data_dossier.etat == 'Accordé']
+        refus = data_dossier[data_dossier.etat == 'Refusé']
+
+        result_dossier = {
+            'type_dossier': type,
+            'accord': len(accord),
+            'refus': len(refus),
+            'proportion': len(accord) / (len(accord) + len(refus))
+        }
+
+        results.append(result_dossier)
+    
+    df = pd.DataFrame(results)
+    
+    save(df, 'APPROVAL_PROPORTION_BY_TYPE', append=False)

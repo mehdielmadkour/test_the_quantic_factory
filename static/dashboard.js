@@ -31,6 +31,16 @@ $.ajax({
     }
 });
 
+$.ajax({
+    url: BASE_URL + PORT + '/api/approval_proportion_by_type',
+    success: function (response) {
+        display_approval_proportion_by_type(response)
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert("Status: " + textStatus); alert("Error: " + errorThrown);
+    }
+});
+
 function display_approval_time_by_district(response) {
     
     let data = {
@@ -117,6 +127,36 @@ function display_approval_proportion_by_district(response) {
 
     let approval_proportion = new Chart(
         document.getElementById('approval_proportion_by_district'),
+        config
+    )
+}
+
+function display_approval_proportion_by_type(response) {
+
+    let data = {
+        labels: response.type_dossier,
+        datasets: [{
+            label: 'approval proportion',
+            backgroundColor: 'rgb(10, 10, 200)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: response.approval_proportion
+        }]
+    }
+
+    let config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    }
+
+    let approval_proportion = new Chart(
+        document.getElementById('approval_proportion_by_type'),
         config
     )
 }
