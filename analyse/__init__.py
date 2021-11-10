@@ -59,3 +59,30 @@ def calculate_approval_time_by_type():
     })
 
     save(df, 'APPROVAL_TIME_BY_TYPE', append=False)
+
+
+def get_approval_proportion_by_district():
+
+    data = getDataFromDatabase('APPROVAL_TIME')
+    data = data.loc[:, ['commune', 'etat']]
+    data = data[data.etat != 'En cours d\'instruction']
+
+    results = []
+    for commune in range(1, 21):
+        data_commune = data[data.commune == commune]
+        
+        accord = data_commune[data_commune.etat == 'Accordé']
+        refus = data_commune[data_commune.etat == 'Refusé']
+
+        result_commune = {
+            'district': commune,
+            'accord': len(accord),
+            'refus': len(refus),
+            'proportion': len(accord) / (len(accord) + len(refus))
+        }
+
+        results.append(result_commune)
+
+    df = pd.DataFrame(results)
+    
+    save(df, 'APPROVAL_BY_DISTRICT', append=False)

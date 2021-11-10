@@ -36,9 +36,25 @@ def approval_time_by_type():
 
     return response
 
+@app.route('/api/approval_proportion_by_district')
+def approval_proportion_by_district():
+
+    get_approval_proportion_by_district()
+    
+    data = getDataFromDatabase('APPROVAL_BY_DISTRICT')
+
+    response =  jsonify({
+        'district': list(data['district']),
+        'approval_proportion': list(data['proportion'])
+    })
+
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    return response
+
 if __name__ == '__main__':
     
     getDataFromDatabase()
     calculate_approval_time()
-    
+
     app.run(debug=True, port=8080)
