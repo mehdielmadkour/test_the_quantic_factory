@@ -1,8 +1,12 @@
 from data import getDataFromDatabase
 from analyse import *
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
+
+@app.route('/')
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/api/approval_time_by_district')
 def approval_time_by_district():
