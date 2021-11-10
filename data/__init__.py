@@ -1,8 +1,12 @@
 import requests
 import pandas as pd
+import sqlalchemy as sa
 
 API_URL = 'https://opendata.paris.fr/api/records/1.0/search/?'
 DATASET = 'dossiers-recents-durbanisme'
+DB_URL = 'sqlite:///dataset.db'
+
+engine = sa.create_engine(DB_URL)
 
 def getDataFromAPI(rows, start=0):
 
@@ -27,13 +31,14 @@ def getAllData(step):
         records = data['records']
 
         df = formatData(records)
-        print(df)
+        save(df, DATASET)
 
         if nhits > step: 
             start += step
             print('{}/{}'.format(start, nhits))
         else :
             print('done')
+
 
 def formatData(records):
 
@@ -42,3 +47,12 @@ def formatData(records):
     df.geo_point_2d = df.geo_point_2d.astype(str)
     df.geo_shape = df.geo_shape.astype(str)
     return df
+
+
+def save(data, database, append=True):
+    if append:
+        data.to_sql(database, engine, if_exists='append', index=False)
+    else: 
+        data.to_sql(database, engine, if_exists='replace', index=False)
+
+getAllData(100)
