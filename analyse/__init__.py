@@ -2,8 +2,10 @@ from datetime import datetime
 from data import getDataFromDatabase, save
 import pandas as pd
 
-def calculate_approval_time(data):
+def calculate_approval_time():
 
+    data = data = getDataFromDatabase()
+    
     data = data.loc[:, ['commune', 'date_depot', 'date_decision', 'etat']]
     time_data = data[data.etat != 'En cours d\'instruction']
 
@@ -18,9 +20,9 @@ def calculate_approval_time(data):
     save(time_data, 'APPROVAL_TIME', append=False)
 
     
-def get_approval_time_by_district(data):
+def calculate_approval_time_by_district():
 
-    calculate_approval_time(data)
+    calculate_approval_time()
 
     data = getDataFromDatabase('APPROVAL_TIME')
 
@@ -36,5 +38,5 @@ def get_approval_time_by_district(data):
         'approval_time': results 
     })
 
-    save(df, 'APPROVAL_TIME_PER_DISTRICT', append=False)
+    save(df, 'APPROVAL_TIME_BY_DISTRICT', append=False)
     print(df)
