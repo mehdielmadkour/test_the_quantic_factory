@@ -5,9 +5,9 @@ import pandas as pd
 def calculate_approval_time():
 
     data = data = getDataFromDatabase()
-    
-    data = data.loc[:, ['commune', 'date_depot', 'date_decision', 'etat']]
-    time_data = data[data.etat != 'En cours d\'instruction']
+
+    data = data.loc[:, ['commune', 'date_depot', 'date_decision', 'etat', 'type_dossier']]
+    data = data[data.etat != 'En cours d\'instruction']
 
     def calculate_time(depot, decision):
         date_depot = datetime.strptime(depot,'%Y-%m-%d')
@@ -15,16 +15,16 @@ def calculate_approval_time():
         time = date_decision - date_depot
         return time.days
 
-    time = list(time_data.apply(lambda row : calculate_time(row['date_depot'], row['date_decision']), axis=1))
-    time_data['time'] = time
-    save(time_data, 'APPROVAL_TIME', append=False)
+    time = list(data.apply(lambda row : calculate_time(row['date_depot'], row['date_decision']), axis=1))
+    data['time'] = time
+    save(data, 'APPROVAL_TIME', append=False)
+    print(data)
 
     
 def calculate_approval_time_by_district():
 
-    calculate_approval_time()
-
     data = getDataFromDatabase('APPROVAL_TIME')
+    data = data.loc[:, ['commune', 'time']]
 
     results = []
     for commune in range(1, 21):
@@ -39,4 +39,23 @@ def calculate_approval_time_by_district():
     })
 
     save(df, 'APPROVAL_TIME_BY_DISTRICT', append=False)
-    print(df)
+
+
+def calculate_approval_time_by_type():
+
+    data = getDataFromDatabase('APPROVAL_TIME')
+    data = data.loc[:, ['type_dossier', 'time']]
+
+    dossiers = ['Déclarations préalables', 'Permis d\'aménager', 'Permis de construire', 'Permis de démolir']
+    
+    results = []
+    for type_dossier in dossiers:
+        data_type = data[data.type_dossier == type_dossier]
+        results.append(data_type['time'].mean())
+
+    df = pd.DataFrame({
+        'type_dossier': dossiers,
+        'approval_time': results 
+    })
+
+    save(df, 'APPROVAL_TIME_BY_TYPE', append=False)
