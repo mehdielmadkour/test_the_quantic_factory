@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="static/dashboard.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/dashboard.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  </head>
+
+  <body>
+  
+    <div class="content">
+      <header>
+        <div class="header-background"></div>
+        <div class="title">
+          <h1>
+            Dashboard
+          </h1>
+        </div>
+      </header>
+      
+      <main>
+        <div class="chartContainer">
+
+          <div class="chart">
+            <text class="chartTitle">Temps d'approbation des dossiers par arrondissement</text>
+            <canvas id="approval_time_by_district"></canvas>
+          </div>
+          
+        </div>
+      </main>
+    </div>
+    
+  </body>
+  
+</html>
