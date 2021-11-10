@@ -6,7 +6,7 @@ def calculate_approval_time():
 
     data = data = getDataFromDatabase()
 
-    data = data.loc[:, ['commune', 'date_depot', 'date_decision', 'etat', 'type_dossier']]
+    data = data.loc[:, ['commune', 'date_depot', 'date_decision', 'etat', 'type_dossier', 'circonscription']]
     data = data[data.etat != 'En cours d\'instruction']
 
     def calculate_time(depot, decision):
@@ -60,7 +60,7 @@ def calculate_approval_time_by_type():
     save(df, 'APPROVAL_TIME_BY_TYPE', append=False)
 
 
-def get_approval_proportion_by_district():
+def calculate_approval_proportion_by_district():
 
     data = getDataFromDatabase('APPROVAL_TIME')
     data = data.loc[:, ['commune', 'etat']]
@@ -87,7 +87,7 @@ def get_approval_proportion_by_district():
     save(df, 'APPROVAL_PROPORTION_BY_DISTRICT', append=False)
 
 
-def get_approval_proportion_by_type():
+def calculate_approval_proportion_by_type():
 
     data = getDataFromDatabase('APPROVAL_TIME')
 
@@ -115,3 +115,53 @@ def get_approval_proportion_by_type():
     df = pd.DataFrame(results)
     
     save(df, 'APPROVAL_PROPORTION_BY_TYPE', append=False)
+
+
+def calculate_approval_time_by_constituency():
+
+    data = getDataFromDatabase('APPROVAL_TIME')
+    data = data.loc[:, ['circonscription', 'time']]
+
+    circonscriptions = ['EST', 'NORD', 'OUEST', 'SUD']
+
+    results = []
+    for circonscription in circonscriptions:
+        data_circonscription = data[data.circonscription == circonscription]
+        results.append(data_circonscription['time'].mean())
+
+    df = pd.DataFrame({
+        'constituency': circonscriptions,
+        'approval_time': results 
+    })
+
+    save(df, 'APPROVAL_TIME_BY_CONSTITUENCY', append=False)
+
+
+def calculate_approval_proportion_by_constituency():
+
+    data = getDataFromDatabase('APPROVAL_TIME')
+
+    data = data.loc[:, ['circonscription', 'etat']]
+    data = data[data.etat != 'En cours d\'instruction']
+
+    circonscriptions = ['EST', 'NORD', 'OUEST', 'SUD']
+
+    results = []
+    for circonscription in circonscriptions:
+        data_circonscription = data[data.circonscription == circonscription]
+        
+        accord = data_circonscription[data_circonscription.etat == 'Accordé']
+        refus = data_circonscription[data_circonscription.etat == 'Refusé']
+
+        result_dossier = {
+            'constituency': circonscription,
+            'accord': len(accord),
+            'refus': len(refus),
+            'proportion': len(accord) / (len(accord) + len(refus))
+        }
+
+        results.append(result_dossier)
+    
+    df = pd.DataFrame(results)
+    
+    save(df, 'APPROVAL_PROPORTION_BY_CONSTITUENCY', append=False)
