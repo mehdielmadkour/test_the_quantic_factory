@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import sqlalchemy as sa
+from sqlalchemy_utils.functions import database_exists
 
 API_URL = 'https://opendata.paris.fr/api/records/1.0/search/?'
 DATASET = 'dossiers-recents-durbanisme'
@@ -55,4 +56,7 @@ def save(data, database, append=True):
     else: 
         data.to_sql(database, engine, if_exists='replace', index=False)
 
-getAllData(100)
+def getDataFromDatabase(database=DATASET):
+
+    if not database_exists(DB_URL): getAllData(100)
+    return pd.read_sql(database, engine)
