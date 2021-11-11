@@ -35,4 +35,6 @@ Les résultats de l'analyse sont disponibles à travers une API Flask renvoyant 
 
 Les résultats sont affichés par le dashboard à l'aide de la librairie Chart JS. Les réponses de l'API sont des tableaux à deux colonnes contenant les données à indiquer en abscisse et les valeurs associées.
 
+![dashboard](img/dashboard.jpg)
+
 
