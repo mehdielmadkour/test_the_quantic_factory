@@ -10,9 +10,9 @@ Ouvrir l'adresse `http://127.0.0.1:8080` ou `http://localhost:8080` pour accéde
 
 ## Documentation
 
-### Spécification
+### Architecture
 
-![spécification](img/specification.jpg)
+![architecture](img/architecture.jpg)
 
 ### Récupération des données
 
