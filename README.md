@@ -1,10 +1,10 @@
 # Test The Quantic Factory
 
-## Instruction
+## Instructions
 
-`python -m pip install -r requirements.txt` pour installer les dépendances.
+Installer les dépendances `python -m pip install -r requirements.txt`
 
-`python app.py` dans le dossier racine pour démarrer le serveur.
+Lancer l'application `python app.py`
 
 Ouvrir l'adresse `http://127.0.0.1:8080` ou `http://localhost:8080` pour accéder au dashboard
 
