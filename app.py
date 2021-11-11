@@ -1,10 +1,8 @@
-from data import getDataFromDatabase
 from analyse import *
 from webserver import server
 
 if __name__ == '__main__':
     
-    getDataFromDatabase()
     calculate_approval_time()
     calculate_approval_time_by_district()
     calculate_approval_time_by_type()

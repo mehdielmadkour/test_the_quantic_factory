@@ -2,6 +2,8 @@ from datetime import datetime
 from data import getDataFromDatabase, save
 import pandas as pd
 
+getDataFromDatabase()
+
 def calculate_approval_time():
 
     data = data = getDataFromDatabase()
