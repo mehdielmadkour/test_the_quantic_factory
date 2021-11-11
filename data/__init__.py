@@ -34,11 +34,12 @@ def getAllData(step):
         df = formatData(records)
         save(df, DATASET)
 
-        if nhits > step: 
+        if nhits > start+step: 
             start += step
             print('{}/{}'.format(start, nhits))
         else :
             print('done')
+            break
 
 
 def formatData(records):
